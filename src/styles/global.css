@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: theme("colors.crust.950");
+    color: theme("colors.crust.100");
+    font-family: theme("fontFamily.sans");
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(at 12% -10%, rgba(245, 158, 11, 0.06), transparent 45%),
+      radial-gradient(at 88% 110%, rgba(52, 211, 153, 0.05), transparent 50%),
+      theme("colors.crust.950");
+  }
+
+  h1, h2, h3, h4 {
+    color: theme("colors.crust.100");
+    letter-spacing: -0.01em;
+  }
+
+  a {
+    color: theme("colors.magma.400");
+  }
+
+  a:hover {
+    color: theme("colors.magma.300");
+  }
+
+  code, pre {
+    font-family: theme("fontFamily.mono");
+    font-size: 0.92em;
+  }
+}
+
+@layer components {
+  .heading-eyebrow {
+    @apply text-xs font-medium uppercase tracking-[0.18em] text-magma-400;
+  }
+
+  .surface-card {
+    @apply rounded-lg border border-crust-700/60 bg-crust-900/60 p-6 backdrop-blur-sm;
+  }
+
+  .surface-card-strong {
+    @apply rounded-lg border border-crust-700 bg-crust-800/80 p-6;
+  }
+
+  .prose-table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  .prose-table th {
+    @apply border-b border-crust-700 px-3 py-2 text-left font-medium text-crust-100;
+  }
+
+  .prose-table td {
+    @apply border-b border-crust-800 px-3 py-2 align-top text-crust-200;
+  }
+
+  .pre-block {
+    @apply overflow-x-auto rounded-md border border-crust-800 bg-crust-950 p-4 text-sm text-crust-100;
+  }
+}
+
+/* Subtle "crystalline" hairline used as a section divider */
+.divider-igneous {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    theme("colors.magma.500") 20%,
+    theme("colors.magma.500") 80%,
+    transparent
+  );
+  height: 1px;
+}
+
+/* Tabular nums helper — applied alongside font-mono for metric values. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

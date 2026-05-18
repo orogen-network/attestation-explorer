@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orogen — Attestation Explorer</title>
+    <meta
+      name="description"
+      content="Paste a signed receipt and inspect its attestation chain on the Orogen network."
+    />
+    <!--
+      Content-Security-Policy meta fallback. Mirrors public/_headers so the
+      policy ships even if edge config drifts. NOTE: `frame-ancestors`,
+      `report-uri`, and `sandbox` cannot be set from a meta tag; the
+      hosting-tier `_headers` file is authoritative for those.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'; connect-src 'self' https://indexer.orogen.network; base-uri 'self'; form-action 'self'; object-src 'none'"
+    />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <!--
+      Fonts are intentionally NOT loaded from fonts.googleapis.com. Tailwind's
+      font-family chain falls back to Inter (if locally installed) → system-ui
+      → standard system stack. See tailwind.config.mjs.
+    -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
