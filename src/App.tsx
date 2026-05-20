@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { AppShell } from "./AppShell";
 import {
   backendFor,
+  mockVerifierAllowed,
   mockCrl,
   verifyReceipt,
   type Receipt,
@@ -33,10 +34,11 @@ export function App(): JSX.Element {
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<VerificationMode>("real");
+  const canUseMock = mockVerifierAllowed();
 
   // Re-build the backend whenever the mode toggles (keeps tests deterministic
   // and avoids stale closure capture in production).
-  const backend = useMemo(() => backendFor(mode), [mode]);
+  const backend = useMemo(() => backendFor(mode, canUseMock), [mode, canUseMock]);
 
   const onVerify = async (): Promise<void> => {
     setError(null);
@@ -83,17 +85,19 @@ export function App(): JSX.Element {
           />
           Real (wasm)
         </label>
-        <label className="inline-flex items-center gap-2 text-crust-200">
-          <input
-            type="radio"
-            name="mode"
-            value="mock"
-            checked={mode === "mock"}
-            onChange={() => setMode("mock")}
-            className="h-4 w-4 cursor-pointer border-crust-700 bg-crust-900 text-magma-500 accent-magma-500 focus:outline-none focus:ring-2 focus:ring-magma-500/60"
-          />
-          Mock (acceptAll)
-        </label>
+        {canUseMock ? (
+          <label className="inline-flex items-center gap-2 text-magma-300">
+            <input
+              type="radio"
+              name="mode"
+              value="mock"
+              checked={mode === "mock"}
+              onChange={() => setMode("mock")}
+              className="h-4 w-4 cursor-pointer border-crust-700 bg-crust-900 text-magma-500 accent-magma-500 focus:outline-none focus:ring-2 focus:ring-magma-500/60"
+            />
+            Mock (dev/test only)
+          </label>
+        ) : null}
       </fieldset>
 
       <label className="block">

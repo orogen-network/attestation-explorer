@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  backendFor,
   mockBackend,
+  mockVerifierAllowed,
   mockCrl,
   verifyReceipt,
   wasmBackend,
@@ -47,6 +49,11 @@ describe("verifier", () => {
     expect(r.ok).toBe(false);
     expect(r.steps.find((s) => s.label.startsWith("Operator key"))?.pass).toBe(false);
   });
+
+  it("does not allow the accept-all backend in production mode", () => {
+    expect(mockVerifierAllowed({ MODE: "production", DEV: false })).toBe(false);
+    expect(() => backendFor("mock", false)).toThrow(/disabled/);
+  });
 });
 
 describe("wasm backend (real sr25519)", () => {
@@ -61,7 +68,7 @@ describe("wasm backend (real sr25519)", () => {
     pubkey: "0x7ac50da58c1a25b131e9c5e76060213fdf05dc799579674937759f884438b414",
     payload: "0xdeadbeefcafef00d",
     signature:
-      "0xbeefc1b06b80f9ae7cb69273b661579f33d20a0cb5733d09b832a4022ed9cc59a3f94c76fe9094775e983f256504a16fbdb31bff3e99faa506075ed8a743808c",
+      "0x8a084a054af544684532cb6460c0c9fb39cba5309d82d36a3945ad48ae2fbb30bc1a0be7191a2b06df89ad5a036a3e7ddfe5145cda8aeb86362dd144822a4d8d",
   };
 
   it("accepts a known-good (pubkey, payload, signature) triple", async () => {

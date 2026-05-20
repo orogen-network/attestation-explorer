@@ -2,9 +2,8 @@
  * Receipt verification.
  *
  * In production this calls into the `wallet-sdk-core` WASM build to verify
- * the sr25519 signature; for the skeleton we ship a pluggable verifier so
- * the UI can be exercised against a mock today and against the real WASM
- * once it's wired in.
+ * the sr25519 signature. The accept-all verifier is available only to tests
+ * and local development; public builds must never report success from it.
  *
  * Receipt schema mirrors RFC-0001 in JSON form. We keep this loose for now
  * because the full type lives in `mining-types` (Python first); a TS mirror
@@ -162,8 +161,23 @@ export function wasmBackend(): SignatureBackend {
  */
 export type VerificationMode = "real" | "mock";
 
-export function backendFor(mode: VerificationMode): SignatureBackend {
-  return mode === "real" ? wasmBackend() : mockBackend({ acceptAll: true });
+export function mockVerifierAllowed(
+  env: { DEV?: boolean; MODE?: string; VITE_ALLOW_MOCK_VERIFIER?: string } = import.meta.env,
+): boolean {
+  return env.DEV === true || env.MODE === "test";
+}
+
+export function backendFor(
+  mode: VerificationMode,
+  allowMock: boolean = mockVerifierAllowed(),
+): SignatureBackend {
+  if (mode === "real") {
+    return wasmBackend();
+  }
+  if (!allowMock) {
+    throw new Error("mock verifier is disabled outside dev/test builds");
+  }
+  return mockBackend({ acceptAll: true });
 }
 
 export async function verifyReceipt(
